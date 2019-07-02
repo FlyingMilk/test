@@ -1,0 +1,67 @@
+package concurrent;
+
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
+
+/**
+ * 自写 自旋锁
+ * @author qqa
+ * @version 1.0 2019年7月2日 下午7:33:56
+ *
+ */
+public class MeSpinLock {
+	
+	AtomicReference<Thread> aReference = new AtomicReference<>();
+	
+	public void myLock(){
+		Thread thread = Thread.currentThread();
+		System.out.println(Thread.currentThread().getName() +"\tInvoke Lock()...");
+		//第一次线程第一次进来时占用占有锁，不进入循环，第二个线程会进入循环，知道第一个线程释放锁
+		while(!aReference.compareAndSet(null, thread)){
+			
+		}
+		System.out.println(Thread.currentThread().getName() +"\tGet Lock...");
+	}
+	
+	public void myUnLock(){
+		Thread thread = Thread.currentThread();
+		System.out.println(Thread.currentThread().getName() +"\tUnLock...");
+		aReference.compareAndSet(thread, null);
+	}
+
+	public static void main(String[] args) {
+		MeSpinLock meSpinLock= new MeSpinLock();
+		
+		new Thread(() -> {
+			meSpinLock.myLock();
+			try {
+				TimeUnit.SECONDS.sleep(5);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}finally{
+				meSpinLock.myUnLock();
+			}
+		},"AAA").start();
+		
+		try {
+			TimeUnit.SECONDS.sleep(1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		new Thread(() -> {
+			meSpinLock.myLock();
+			try {
+				TimeUnit.SECONDS.sleep(2);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}finally{
+				meSpinLock.myUnLock();
+			}
+		},"BBB ").start();
+		
+	
+
+	}
+
+}
