@@ -1,0 +1,41 @@
+package concurrent;
+
+import java.util.concurrent.CyclicBarrier;
+
+/**
+ * CyclicBarrier类的测试类
+ * @author qqa
+ * @version 1.0 2019年7月3日 下午8:51:45
+ *
+ */
+public class CyclicBarrierDemo {
+
+	public static void main(String[] args) {
+		
+		CyclicBarrier cyclicBarrier = new CyclicBarrier(7,() -> {System.out.println("集齐龙珠，召唤神龙...");});
+		
+		for(int i = 1; i <= 7; i++){
+			final int tempInt = i;
+			new Thread(() -> {
+				System.out.println(Thread.currentThread().getName() + " 收集第"+ tempInt +"颗龙珠");
+				try {
+					cyclicBarrier.await();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			},String.valueOf(i)).start();
+		}
+	}
+
+}
+
+/*  运行结果
+3 收集第3颗龙珠
+1 收集第1颗龙珠
+2 收集第2颗龙珠
+4 收集第4颗龙珠
+5 收集第5颗龙珠
+6 收集第6颗龙珠
+7 收集第7颗龙珠
+集齐龙珠，召唤神龙...
+*/
