@@ -1,0 +1,36 @@
+package javacollections;
+
+public enum EnumDemo {
+	
+	ONE(1,"齐"),TWO(2,"楚"),THREE(3,"燕"),FOUR(4,"赵"),FIVE(5,"魏"),SIX(6,"韩");
+	
+	private Integer code;
+	private String value;
+	
+	private EnumDemo(Integer code, String value) {
+		this.code = code;
+		this.value = value;
+	}
+
+	public Integer getCode() {
+		return code;
+	}
+	public String getValue() {
+		return value;
+	}
+	
+	/**
+	 * 根据code返回enum
+	 * @param code
+	 * @return
+	 */
+	public static EnumDemo forEach_EnumDemo(int code){
+		EnumDemo[] enumDemos = EnumDemo.values();	//获取枚举的数组
+		for(EnumDemo enumDemo : enumDemos){			
+			if( code == enumDemo.getCode()){
+				return enumDemo;
+			}
+		}
+		return null;
+	}
+}
