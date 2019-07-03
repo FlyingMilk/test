@@ -1,0 +1,75 @@
+package concurrent;
+
+import java.util.concurrent.CountDownLatch;
+
+
+/**
+ * 
+ * @author qqa
+ * @version 1.0 2019年7月3日 下午8:19:42
+ * 
+ * CountDownLatch类的测试方法
+ * CountDownLatch用给定的计数初始化。
+ * await()方法阻塞，直到由于countDown()方法的调用而导致当前计数达到零，之后所有等待线程被释放。
+ */
+public class CountDownLatchDemo {
+
+	public static void main(String[] args) {
+		
+		CountDownLatch countDownLatch = new CountDownLatch(6);	//设置初始计数器为6
+		for (int i = 1; i <= 6; i++) {
+			new Thread(() -> {
+				System.out.println(Thread.currentThread().getName() + "国被灭...");
+				countDownLatch.countDown();			//调用countDown()方法，使计数器减一
+			},EnumDemo.forEach_EnumDemo(i).getValue()).start();
+		}
+		
+		try {
+			countDownLatch.await();			//当计数器减到零时释放，否则一直阻塞。
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		System.out.println(Thread.currentThread().getName() + "秦国一统华夏...");
+		
+	}
+
+	
+}
+
+enum EnumDemo {
+	
+	ONE(1,"齐"),TWO(2,"楚"),THREE(3,"燕"),FOUR(4,"赵"),FIVE(5,"魏"),SIX(6,"韩");
+	
+	private Integer code;
+	private String value;
+	
+	private EnumDemo(Integer code, String value) {
+		this.code = code;
+		this.value = value;
+	}
+
+	public Integer getCode() {
+		return code;
+	}
+
+	public String getValue() {
+		return value;
+	}
+	
+	/**
+	 * 根据code返回enum
+	 * @param code
+	 * @return
+	 */
+	public static EnumDemo forEach_EnumDemo(int code){
+		EnumDemo[] enumDemos = EnumDemo.values();	//获取枚举的数组
+		for(EnumDemo enumDemo : enumDemos){			
+			if( code == enumDemo.getCode()){
+				return enumDemo;
+			}
+		}
+		return null;
+	}
+	
+	
+}
