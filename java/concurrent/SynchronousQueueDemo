@@ -1,0 +1,47 @@
+package concurrent;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * 阻塞队列SynchronousQueue练习
+ * @author qqa
+ * @version 1.0 2019年7月4日 下午8:21:41
+ *
+ */
+public class SynchronousQueueDemo {
+
+	public static void main(String[] args) {
+		
+		BlockingQueue<String> bQueue = new SynchronousQueue<>();
+		
+		new Thread(() ->{
+			try {
+				System.out.println(Thread.currentThread().getName() + " Put 1");
+				bQueue.put("1");
+				System.out.println(Thread.currentThread().getName() + " Put 2");
+				bQueue.put("2");
+				System.out.println(Thread.currentThread().getName() + " Put 3");
+				bQueue.put("3");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		},"AAA").start();
+		
+		new Thread(() ->{
+			try {
+				TimeUnit.SECONDS.sleep(3);	//等待3秒
+				//只有BBB线程取出后AAA才能在put进去
+				System.out.println(Thread.currentThread().getName() + " Get " + bQueue.take());
+				TimeUnit.SECONDS.sleep(3);
+				System.out.println(Thread.currentThread().getName() + " Get " + bQueue.take());
+				TimeUnit.SECONDS.sleep(3);
+				System.out.println(Thread.currentThread().getName() + " Get " + bQueue.take());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		},"BBB").start();
+	}
+
+}
